@@ -618,15 +618,15 @@ class PlannerImpl {
 
       bool has_fence = false;
       for (auto node_input : pnode->InputDefs()) {
-        has_fence |= HasFence(node_input);
+        has_fence ||= HasFence(node_input);
       }
 
       for (auto node_input : pnode->ImplicitInputDefs()) {
-        has_fence |= HasFence(node_input);
+        has_fence ||= HasFence(node_input);
       }
 
       for (auto node_output : pnode->OutputDefs()) {
-        has_fence |= HasFence(node_output);
+        has_fence ||= HasFence(node_output);
       }
 
       plan_.node_has_fence[step.node_index] = has_fence;
