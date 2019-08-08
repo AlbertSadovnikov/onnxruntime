@@ -7,26 +7,13 @@
 
 #include "core/automl/featurizers/src/FeaturizerPrep/Featurizers/DateTimeFeaturizer.h"
 
-namespace onnxruntime {
-
 namespace dtf = Microsoft::Featurizer::DateTimeFeaturizer;
 
-// XXX: move to a common file, create a registration function
-// and add to data_types registry
-
-// This temporary to register custom types so ORT is aware of it
-// although it still can not serialize such a type.
-// These character arrays must be extern so the resulting instantiated template
-// is globally unique
-extern const char kMsAutoMLDomain[] = "com.microsoft.automl";
-extern const char kTimepointName[] = "DateTimeFeaturizer_TimePoint";
-// This has to be under onnxruntime to properly specialize a function template
-ORT_REGISTER_OPAQUE_TYPE(dtf::TimePoint, kMsAutoMLDomain, kTimepointName);
-
+namespace onnxruntime {
 namespace automl {
 
 class DateTimeTransformer final : public OpKernel {
-public:
+ public:
   explicit DateTimeTransformer(const OpKernelInfo& info) : OpKernel(info) {}
   Status Compute(OpKernelContext* context) const override;
 };
