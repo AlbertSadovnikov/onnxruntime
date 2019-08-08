@@ -19,25 +19,27 @@ void RegisterAutoMLSchemas() {
     DateTimeTransformer accepts a single scalar int64 tensor, constructs
     an instance of std::chrono::system_clock::time_point and passes it as an argument
     to Microsoft::DateTimeFeaturizer which is a part of a shared library.
+    It returns an instance of TimePoint class.
   )DOC";
 
   MS_AUTOML_OPERATOR_SCHEMA(DateTimeTransformer)
       .SinceVersion(1)
       .SetDoc(DateTimeTransformer_ver1_doc)
-      .Input(0, "X", "The input represents a number of seconds passed since the epoch, suitable to properly construct"
-        "an instance of std::chrono::system_clock::time_point", "T1")
+      .Input(0, "X",
+             "The input represents a number of seconds passed since the epoch, suitable to properly construct"
+             "an instance of std::chrono::system_clock::time_point",
+             "T1")
       .Output(0, "Y", "The output which is a Microsoft::DateTimeFeaturizer::TimePoint structure", "T2")
       .TypeConstraint(
           "T1",
           {"tensor(int64)"},
           "Constrain input type to int64 scalar tensor.")
-    .TypeConstraint(
+      .TypeConstraint(
           "T2",
           {"opaque(com.microsoft.automl,DateTimeFeaturizer_TimePoint)"},
           "Constrain output type to an AutoML specific Microsoft::Featurizers::TimePoint type"
           "currently not part of ONNX standard. When it becomes a part of the standard we will adjust this"
-          "kernel definition and move it to ONNX repo")
-      .TypeAndShapeInferenceFunction(ONNX_NAMESPACE::propagateShapeAndTypeFromFirstInput);
+          "kernel definition and move it to ONNX repo");
 }
 }  // namespace automl
 }  // namespace onnxruntime

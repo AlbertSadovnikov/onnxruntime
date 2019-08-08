@@ -62,13 +62,13 @@ if(onnxruntime_USE_NNAPI)
   list(APPEND ONNXRUNTIME_PROVIDER_NAMES nnapi)
 endif()
 source_group(TREE ${ONNXRUNTIME_ROOT}/core FILES ${onnxruntime_providers_common_srcs} ${onnxruntime_providers_srcs})
-# add using ONNXRUNTIME_ROOT so they show up under the 'contrib_ops' folder in Visual Studio
-source_group(TREE ${ONNXRUNTIME_ROOT} FILES ${onnxruntime_cpu_contrib_ops_srcs})
 
 set(onnxruntime_providers_src ${onnxruntime_providers_common_srcs} ${onnxruntime_providers_srcs})
 
 # disable contrib ops conditionally
 if(NOT onnxruntime_DISABLE_CONTRIB_OPS)
+  # add using ONNXRUNTIME_ROOT so they show up under the 'contrib_ops' folder in Visual Studio
+  source_group(TREE ${ONNXRUNTIME_ROOT} FILES ${onnxruntime_cpu_contrib_ops_srcs})
   list(APPEND onnxruntime_providers_src ${onnxruntime_cpu_contrib_ops_srcs})
 endif()
 
@@ -81,8 +81,9 @@ add_library(onnxruntime_providers ${onnxruntime_providers_src})
 onnxruntime_add_include_to_target(onnxruntime_providers onnxruntime_common onnxruntime_framework gsl onnx onnx_proto protobuf::libprotobuf)
 
 if (onnxruntime_USE_AUTOML)
-  add_dependencies(onnxruntime_providers onnxruntime_automl_featurizers)
-  onnxruntime_add_include_to_target(onnxruntime_providers onnxruntime_automl_featurizers)
+  add_dependencies(onnxruntime_providers automl_featurizers)
+  onnxruntime_add_include_to_target(onnxruntime_providers automl_featurizers)
+  target_link_libraries(onnxruntime_providers automl_featurizers)
 endif()
 
 if(HAS_DEPRECATED_COPY)
